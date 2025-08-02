@@ -1,0 +1,6 @@
+@Payphone.API_HostAddress = http://localhost:5186
+
+GET {{Payphone.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
