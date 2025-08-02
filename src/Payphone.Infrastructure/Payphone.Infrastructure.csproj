@@ -6,4 +6,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Payphone.Application\Payphone.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="EF\Repositories\" />
+      <Folder Include="EF\Seeds\" />
+    </ItemGroup>
+
 </Project>
