@@ -298,3 +298,102 @@ Payphone.sln
 
 
 ## Preguntas
+----
+# 1. ¿Cómo tu implementación puede ser escalable a miles de transacciones?
+
+Aqui se presentan varias opciones:
+
+### Arquitectura
+
+- Arquitectura orientada a eventos:  Implementar Message brokers como  RabbitMQ etc, para procesar transacciones de forma asíncrona.
+
+### Base de datos
+
+- Optimizacion de base de datos: Crear indices compuestos para mejorar el performance.
+- Crear particionado logico para dividir las tablas en fechas
+
+### Cache
+
+- implementar un sistema de cache con redis que opere sobre todas las operaciones de la wallet y las mantega actualizada
+
+
+### Microservicios
+ - Crear un microservicio que gestione la wallet
+ - Otro microservicio que gestione las transacciones
+ - Otro para manejar los usuarios y auth.
+
+
+----
+
+
+# 1. ¿Cómo tu implementación asegura el principio de idempotencia?
+
+
+
+- Implementacion de patrones como el circle breaker pattern para manejar reintentos cuando falla alguna operacion critica
+- Implementar traking en las operaciones
+- Bloquear registros durante operaciones criticas
+- Implementar con rabbit Dead Letters Queues para mensajes que no se puedan procesar.
+
+---
+
+
+# 1. ¿Cómo protegerías tus servicios para evitar ataques de Denegación de servicios, sql injection, CSRF?
+
+
+ DDOS:
+
+ - implementacion de api.gateway
+ - Rate limiting por ip o usuario
+ - implementar alguna CDN con proteccion DDos como cloudflare
+ - implementar Load Balancers
+
+Sql injection:
+
+ - actualmente cubierto, como sugerencia agregarle al connection string un usuario con los privilegios necesarios
+
+
+CSRF:
+
+ - Implementar Anti-forgery Tokens
+ - Cors restrictivo para origenes conocidos
+ - forzar HTTPS
+ - JWT con expiracion y rotacion
+ - Multi-factor auth.
+
+---
+
+
+# 1. ¿Cuál sería tu estrategia para migrar un monolito a microservicios?
+
+
+- Identificar bounded contexts y límites de dominio
+- Mapear dependencias entre módulos
+- Definir qué servicio posee qué datos
+- Diseñar contratos entre servicios
+- Reemplazar gradualmente funcionalidades del monolito
+- Crear un API Gateway: Punto de entrada único que enruta a servicios específicos
+- Cada servicio debe tener su propia base de datos
+- Comunicación asíncrona entre servicios
+- Circuit Breaker: Para manejo de fallos entre servicios
+- Health Checks: Para detectar servicios no saludables
+
+
+----
+
+
+
+# 1. ¿Qué alternativas a la solución requerida propondrías para una solución escalable?
+
+
+Alternativa 1: Arquitectura Event-Driven
+
+Ventajas: Desacoplamiento, escalabilidad, auditoría completa
+Desventajas: Complejidad, consistencia eventual
+Casos de Uso: Sistemas de alta concurrencia, auditoría crítica
+
+
+Alternativa 2: Microservicios con API Gateway
+Ventajas: Independencia de equipos, escalabilidad granular
+Desventajas: Complejidad operacional, latencia de red
+Casos de Uso: Organizaciones grandes, dominios complejos
