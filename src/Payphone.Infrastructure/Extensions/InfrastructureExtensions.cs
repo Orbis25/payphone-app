@@ -1,4 +1,5 @@
 using Payphone.Application.Options;
+using Payphone.Application.Services.Core;
 using Payphone.Application.Services.Users;
 using Payphone.Infrastructure.EF.Seeds;
 
@@ -10,6 +11,7 @@ public static class InfrastructureExtensions
         string xml)
     {
         services.AddEndpointsApiExplorer();
+        services.AddHttpContextAccessor();
         services.AddSwaggerConfig(xml);
 
         services.AddPersistence(configuration)
@@ -106,7 +108,9 @@ public static class InfrastructureExtensions
 
     private static IServiceCollection AddServices(this IServiceCollection service)
     {
+        service.AddScoped<IApplicationContext, ApplicationContext>();
         service.AddScoped<IUserService, UserService>();
+        
         return service;
     }
     

@@ -2,8 +2,11 @@ namespace Payphone.Infrastructure.EF.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<User>
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
+    private readonly IApplicationContext _appContext;
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IApplicationContext appContext) :base(options)
     {
+        _appContext = appContext;
+        
         if (Database.GetPendingMigrations().Any())
         {
             Database.Migrate();
@@ -28,32 +31,16 @@ public class ApplicationDbContext : IdentityDbContext<User>
             {
                 case EntityState.Added:
                     entity.Entity.CreatedAt = DateTime.UtcNow;
+                    entity.Entity.CreatedBy = _appContext.UserId;
                     break;
                 case EntityState.Modified:
                     entity.Entity.UpdatedAt = DateTime.UtcNow;
+                    entity.Entity.UpdatedBy = _appContext.UserId;
                     break;
                     
             }
         }
 
         return base.SaveChangesAsync(cancellationToken);
-    }
-
-    public override int SaveChanges()
-    {
-        foreach (var entity in ChangeTracker.Entries<BaseModel>())
-        {
-            switch (entity.State)
-            {
-                case EntityState.Added:
-                    entity.Entity.CreatedAt = DateTime.UtcNow;
-                    break;
-                case EntityState.Modified:
-                    entity.Entity.UpdatedAt = DateTime.UtcNow;
-                    break;
-            }
-        }
-
-        return base.SaveChanges();
     }
 }

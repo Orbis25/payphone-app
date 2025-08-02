@@ -19,3 +19,4 @@ global using Payphone.Application.Mappers;
 global using Payphone.Domain.Models;
 global using Microsoft.EntityFrameworkCore.Metadata;
 global using Payphone.Infrastructure.EF.Configurations.Core;
+global using Payphone.Application.Services.Core;
