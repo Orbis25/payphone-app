@@ -10,4 +10,3 @@ global using Microsoft.IdentityModel.Tokens;
 global using Payphone.Application.Dtos.Core;
 global using Payphone.Application.Dtos.Users;
 global using Payphone.Domain.Models;
-global using Payphone.Domain.Options;

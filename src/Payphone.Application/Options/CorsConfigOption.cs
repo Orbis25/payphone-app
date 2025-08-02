@@ -1,4 +1,6 @@
-namespace Payphone.Domain.Options;
+using System.Collections.Immutable;
+
+namespace Payphone.Application.Options;
 
 public class CorsConfigOption
 {

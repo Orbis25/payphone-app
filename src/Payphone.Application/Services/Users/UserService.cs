@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Payphone.Application.Options;
+
 namespace Payphone.Application.Services.Users;
 
 public class UserService : IUserService
@@ -29,33 +32,40 @@ public class UserService : IUserService
             _logger.LogInformation("user not found with email {email}", input.Email);
             return new() { Message = "invalid email/password" };
         }
-        
-        
-        var result = await _signInManager.PasswordSignInAsync(user, input.Password!, false, false)
-            .ConfigureAwait(false);
 
-        if (!result.Succeeded)
+        try
         {
-            _logger.LogInformation("invalid email/password for user with email {email}", input.Email);
-            return new() { Message = "Invalid email/password" };
-        }
-        
-        
-        _logger.LogInformation("user logged in with email {email}", input.Email);
-        
-        var jwt = BuildToken(user);
-        
+            var result = await _signInManager.PasswordSignInAsync(user, input.Password!, false, false)
+                .ConfigureAwait(false);
 
-        _logger.LogInformation("returning jwt for user with email {email}", input.Email);
-        
-        return new()
-        {
-            Data = new()
+            if (!result.Succeeded)
             {
-                Jwt = jwt,
-                UserId = user.Id
+                _logger.LogInformation("invalid email/password for user with email {email}", input.Email);
+                return new() { Message = "Invalid email/password" };
             }
-        };
+
+
+            _logger.LogInformation("user logged in with email {email}", input.Email);
+
+            var jwt = BuildToken(user);
+
+
+            _logger.LogInformation("returning jwt for user with email {email}", input.Email);
+
+            return new()
+            {
+                Data = new()
+                {
+                    Jwt = jwt,
+                    UserId = user.Id
+                }
+            };
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error logging in user with email {email}: {Message}", input.Email, e.Message);
+            return new() { Message = "Lo sentimos ha ocurrido un error : " + e.Message };
+        }
     }
 
 
@@ -78,5 +88,36 @@ public class UserService : IUserService
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public async Task SeedAsync()
+    {
+        try
+        {
+            var users = _userManager.Users.Any();
+            if (!users)
+            {
+                var user = new User
+                {
+                    UserName = _jwtOption.DefaultUser,
+                    NormalizedUserName = _jwtOption?.DefaultUser?.ToUpperInvariant(),
+                    Email = _jwtOption?.DefaultUser,
+                    NormalizedEmail = _jwtOption?.DefaultUser?.ToUpperInvariant(),
+                    EmailConfirmed = true,
+                    FullName = "Payphone Default User",
+                };
+
+                var result = await _userManager.CreateAsync(user, _jwtOption?.DefaultPassword ?? "");
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception("invalid default user creation");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while seeding the database for users: {Message}", e.Message);
+        }
     }
 }

@@ -1,3 +1,7 @@
+using Payphone.Application.Options;
+using Payphone.Application.Services.Users;
+using Payphone.Infrastructure.EF.Seeds;
+
 namespace Payphone.Infrastructure.Extensions;
 
 public static class InfrastructureExtensions
@@ -21,13 +25,13 @@ public static class InfrastructureExtensions
         return services;
     }
 
-    public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
+    public static void UseInfrastructure(this IApplicationBuilder app)
     {
         app.UseHttpsRedirection();
         app.UseCors();
+        app.ApplySeedConfiguration();
         app.UseAuthentication();
         app.UseAuthorization();
-        return app;
     }
     
     
@@ -102,6 +106,7 @@ public static class InfrastructureExtensions
 
     private static IServiceCollection AddServices(this IServiceCollection service)
     {
+        service.AddScoped<IUserService, UserService>();
         return service;
     }
     
@@ -117,11 +122,13 @@ public static class InfrastructureExtensions
             // Set the comments path for the Swagger JSON and UI.
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xml);
             config.IncludeXmlComments(xmlPath);
+            
 
             config.SwaggerDoc("v1", new()
             {
                 Version = "v1.0",
                 Title = "PAYPHONE APP API",
+                Description = "user and password user:payphone@payphone.com, password: 123@payphone",
             });
 
             config.AddSecurityDefinition("Bearer", new()
