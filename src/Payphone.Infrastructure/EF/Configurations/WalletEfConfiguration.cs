@@ -28,8 +28,8 @@ public class WalletEfConfiguration : EfCoreConfiguration<Wallet>
             .HasDefaultValue(0);
         
         builder.HasMany(x => x.Transactions)
-            .WithOne(x => x.Wallet)
-            .HasForeignKey(x => x.WalletId)
+            .WithOne(x => x.FromWallet)
+            .HasForeignKey(x => x.FromWalletId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
