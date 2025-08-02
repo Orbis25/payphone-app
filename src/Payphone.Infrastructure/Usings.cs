@@ -17,3 +17,5 @@ global using Microsoft.AspNetCore.Identity;
 global using Microsoft.IdentityModel.Tokens;
 global using Payphone.Application.Mappers;
 global using Payphone.Domain.Models;
+global using Microsoft.EntityFrameworkCore.Metadata;
+global using Payphone.Infrastructure.EF.Configurations.Core;
