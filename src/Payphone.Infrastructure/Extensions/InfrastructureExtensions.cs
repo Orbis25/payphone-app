@@ -1,6 +1,11 @@
+using FluentValidation;
+using Payphone.Application.Dtos.Wallets;
 using Payphone.Application.Options;
+using Payphone.Application.Repositories;
 using Payphone.Application.Services.Core;
 using Payphone.Application.Services.Users;
+using Payphone.Application.Services.Wallets;
+using Payphone.Infrastructure.EF.Repositories;
 using Payphone.Infrastructure.EF.Seeds;
 
 namespace Payphone.Infrastructure.Extensions;
@@ -74,7 +79,7 @@ public static class InfrastructureExtensions
     
     private static IServiceCollection AddValidators(this IServiceCollection services)
     {
-        // services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateOrUpdateWallet>();
         services.AddFluentValidationAutoValidation();
         return services;
     }
@@ -109,6 +114,7 @@ public static class InfrastructureExtensions
     private static IServiceCollection AddServices(this IServiceCollection service)
     {
         service.AddScoped<IApplicationContext, ApplicationContext>();
+        service.AddScoped<IWalletService, WalletService>();
         service.AddScoped<IUserService, UserService>();
         
         return service;
@@ -116,6 +122,9 @@ public static class InfrastructureExtensions
     
     private static IServiceCollection AddRepositories(this IServiceCollection service)
     {
+        service.AddScoped<IWalletRepository, WalletRepository>();
+        service.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
+        
         return service;
     }
 

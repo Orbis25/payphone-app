@@ -6,7 +6,7 @@ public class Wallet : BaseModel
 {
     public Guid WalletCode { get; set; } = Guid.NewGuid();
     public string? OwnerDocumentId { get; set; }
-    public decimal OwnerName { get; set; }
+    public string? OwnerName { get; set; }
     public decimal CurrentBalance { get; set; }
     public ICollection<WalletTransaction>? Transactions { get; set; }
 }
