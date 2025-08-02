@@ -10,8 +10,4 @@
       <ProjectReference Include="..\Payphone.Application\Payphone.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="EF\Repositories\" />
-    </ItemGroup>
-
 </Project>
