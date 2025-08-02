@@ -9,5 +9,6 @@ public class WalletMapper : Profile
     {
         CreateMap<Wallet, WalletDto>().ReverseMap();
         CreateMap<Wallet, CreateOrUpdateWallet>().ReverseMap();
+        CreateMap<WalletTransaction, WalletTransactionDto>().ReverseMap();
     }
 }

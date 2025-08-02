@@ -4,7 +4,7 @@ public class WalletTransactionEfConfiguration : EfCoreConfiguration<WalletTransa
 {
     protected override void ConfigureEf(EntityTypeBuilder<WalletTransaction> builder)
     {
-        builder.HasIndex(x => x.WalletId);
+        builder.HasIndex(x => x.FromWalletId);
         builder.Property(x => x.Amount)
             .HasColumnType("decimal(18,2)")
             .IsRequired()
